@@ -29,7 +29,7 @@ const configRootPath = path.join(
 
 console.log('configRootPath: ', configRootPath);
 const url = nodeFs.readFileSync(configRootPath, 'utf8');
-console.log(url)
+console.log(url);
 
 const DEBUG = true;
 export default class AppUpdater {
@@ -47,28 +47,26 @@ export interface IpcRequest {
   params?: string;
 }
 
+export interface IpcResponse {
+  responseChannel: string;
+  params: string;
+}
+
+const client = new MongoClient(url, { useNewUrlParser: true });
+client.connect();
+
+const db = client.db('Blind');
+
 ipcMain.handle('get-data', (event: Event, arg) => {
   console.log('get-data: ', arg);
-  MongoClient.connect(url, function foo(err: Error, db: typeof MongoClient) {
-    if (err) throw err;
-    const dbo = db.db('Blind');
-    dbo
-      .collection(arg)
-      .find({})
-      .toArray((er: Error, result: JSON) => {
-        if (er) throw er;
-        db.close();
-        console.log(result[0]);
-        return result;
-      });
-  });
+  const f: Promise = db.collection(arg).find();
+  return f.toArray();
 });
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
-
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';

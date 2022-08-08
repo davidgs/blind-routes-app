@@ -1,8 +1,19 @@
 import { useEffect, useState } from 'react';
 
-export default function Attendees() {
-  const [attendees, setAttendees] = useState({});
 
+export default function Attendees() {
+  const [attendees, setAttendees] = useState('');
+
+  // const handleResponse = (_event: any, response: Response) => {
+  //   console.log('Response: ', response);
+  //   setAttendees(response.message);
+  // };
+
+  // useEffect((): any => {
+  //   ipc.on('blind-routes', handleResponse);
+
+  //   return () => ipc.off('blind-routes', handleResponse);
+  // }, []);
   //   // eslint-disable-next-line promise/catch-or-return
   useEffect(() => {
     window.electronAPI
