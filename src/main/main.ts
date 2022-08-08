@@ -57,10 +57,19 @@ client.connect();
 
 const db = client.db('Blind');
 
-ipcMain.handle('get-data', (event: Event, arg) => {
+ipcMain.handle('get-data', (event: Event, arg: string, type: string, query: string) => {
+  console.log(event);
   console.log('get-data: ', arg);
-  const f: Promise = db.collection(arg).find();
-  return f.toArray();
+  console.log("type: ", type);
+  console.log("Query: ", query);
+  if(type === 'projection') {
+    const projection = query;
+    const f: Promise = db.collection(arg).find().project(projection);
+    return f.toArray();
+  } else if(type === 'find') {
+    const f: Promise = db.collection(arg).find(query);
+    return f.toArray();
+  }
 });
 
 if (process.env.NODE_ENV === 'production') {
