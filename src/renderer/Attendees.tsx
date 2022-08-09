@@ -33,19 +33,21 @@ export default function Attendees() {
               aria-label="Attendees"
               value={selectedValue}
               onChange={(eventKey) => {
+                const jval = JSON.parse(eventKey.target.value);
                 console.log('onSelect', eventKey.target.value);
-                console.log('ID: ', eventKey.target.id);
-                console.log('Key: ', eventKey.target.key);
-                setSelectedValue(eventKey.target.value);
-                setSelectedID(eventKey.target.id);
-                console.log('Type Prefix: ', eventKey.target.value);
+                console.log('ID: ', jval.id);
+                setSelectedValue(jval.Name);
+                setSelectedID(jval.id);
               }}
             >
               <option defaultValue>
                 {selectedValue === '' ? 'Choose one ...' : selectedValue }
               </option>
               {attendees.map((attendee) => (
-                <option id={`${attendee.id}`} key={`${attendee.id}`} value={`${attendee.Name}`}>
+                <option
+                  key={attendee.id}
+                  value={`{"Name": "${attendee.Name}", "id": "${attendee.id}" }`}
+                >
                   {attendee.Name}
                 </option>
               ))}
